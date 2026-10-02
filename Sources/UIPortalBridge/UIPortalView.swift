@@ -84,6 +84,27 @@ public class UIPortalView: UIView {
         }
     }
 
+    /// Whether the underlying portal view participates in hit testing.
+    ///
+    /// The default value is `false`.
+    public var allowsHitTesting: Bool = false {
+        didSet {
+            portalView?.setValue(allowsHitTesting, forKey: "allowsHitTesting")
+        }
+    }
+
+    /// Whether hit tests on the mirrored content are forwarded to the source view.
+    ///
+    /// The default value is `false`.
+    public var forwardsClientHitTestingToSourceView: Bool = false {
+        didSet {
+            portalView?.setValue(
+                forwardsClientHitTestingToSourceView,
+                forKey: "forwardsClientHitTestingToSourceView"
+            )
+        }
+    }
+
     /// When `true`, the portal matches the source view's alpha value.
     public var matchesAlpha: Bool = true {
         didSet {
@@ -129,12 +150,19 @@ public class UIPortalView: UIView {
         }
 
         let portal = portalClass.init(frame: bounds)
+        // Let the portal-specific flags control hit testing.
+        portal.isUserInteractionEnabled = true
         portal.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(portal)
         self.portalView = portal
         isAvailable = true
 
         // Set default properties
+        portal.setValue(allowsHitTesting, forKey: "allowsHitTesting")
+        portal.setValue(
+            forwardsClientHitTestingToSourceView,
+            forKey: "forwardsClientHitTestingToSourceView"
+        )
         portal.setValue(matchesAlpha, forKey: "matchesAlpha")
         portal.setValue(matchesTransform, forKey: "matchesTransform")
         portal.setValue(matchesPosition, forKey: "matchesPosition")
@@ -145,6 +173,11 @@ public class UIPortalView: UIView {
 
         portalView?.setValue(sourceView, forKey: "sourceView")
         portalView?.setValue(hidesSourceView, forKey: "hidesSourceView")
+        portalView?.setValue(allowsHitTesting, forKey: "allowsHitTesting")
+        portalView?.setValue(
+            forwardsClientHitTestingToSourceView,
+            forKey: "forwardsClientHitTestingToSourceView"
+        )
         portalView?.setValue(matchesAlpha, forKey: "matchesAlpha")
         portalView?.setValue(matchesTransform, forKey: "matchesTransform")
         portalView?.setValue(matchesPosition, forKey: "matchesPosition")
