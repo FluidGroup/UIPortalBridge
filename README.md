@@ -45,6 +45,8 @@ portal.hidesSourceView = false  // Hide the source while portaling
 portal.matchesAlpha = true      // Match source alpha
 portal.matchesTransform = true  // Match source transform
 portal.matchesPosition = true   // Match source position
+portal.allowsHitTesting = false  // Allow hit testing on the portal
+portal.forwardsClientHitTestingToSourceView = false // Forward hit tests to the source
 ```
 
 Check `portal.isAvailable` to verify the private API is available on the current iOS version.
@@ -78,15 +80,17 @@ struct ContentView: View {
 }
 ```
 
-### PortalView Options
+### PortalMirrorView Options
 
 ```swift
-PortalView(
-    source: container,
+PortalMirrorView(
+    source,
     hidesSource: false,
     matchesAlpha: true,
     matchesTransform: true,
-    matchesPosition: true
+    matchesPosition: true,
+    allowsHitTesting: false,
+    forwardsClientHitTestingToSourceView: false
 )
 ```
 
@@ -100,7 +104,9 @@ PortalViewRepresentable(
     hidesSourceView: false,
     matchesAlpha: true,
     matchesTransform: true,
-    matchesPosition: true
+    matchesPosition: true,
+    allowsHitTesting: false,
+    forwardsClientHitTestingToSourceView: false
 )
 ```
 
@@ -113,6 +119,8 @@ PortalViewRepresentable(
 | `sourceView` | `UIView?` | `nil` | The view to mirror |
 | `isAvailable` | `Bool` | - | Whether the private API is available (read-only) |
 | `hidesSourceView` | `Bool` | `false` | Hide source while portaling |
+| `allowsHitTesting` | `Bool` | `false` | Allow hit testing on the portal |
+| `forwardsClientHitTestingToSourceView` | `Bool` | `false` | Forward hit tests on mirrored content to the source view |
 | `matchesAlpha` | `Bool` | `true` | Match source alpha |
 | `matchesTransform` | `Bool` | `true` | Match source transform |
 | `matchesPosition` | `Bool` | `true` | Match source position |

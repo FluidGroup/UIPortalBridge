@@ -28,19 +28,37 @@ public struct PortalViewRepresentable: UIViewRepresentable {
     var matchesAlpha: Bool
     var matchesTransform: Bool
     var matchesPosition: Bool
+    var allowsHitTesting: Bool
+    var forwardsClientHitTestingToSourceView: Bool
     
+    /// Creates a live mirror of a UIKit view.
+    ///
+    /// - Parameters:
+    ///   - sourceView: The view to mirror.
+    ///   - hidesSourceView: Whether to hide the source while it is mirrored.
+    ///   - matchesAlpha: Whether to match the source view's alpha.
+    ///   - matchesTransform: Whether to match the source view's transform.
+    ///   - matchesPosition: Whether to match the source view's position.
+    ///   - allowsHitTesting: Whether the portal participates in hit testing.
+    ///     Defaults to `false`.
+    ///   - forwardsClientHitTestingToSourceView: Whether to forward hit tests
+    ///     on the mirrored content to the source view. Defaults to `false`.
     public init(
         sourceView: UIView?,
         hidesSourceView: Bool = false,
         matchesAlpha: Bool = true,
         matchesTransform: Bool = true,
-        matchesPosition: Bool = false
+        matchesPosition: Bool = false,
+        allowsHitTesting: Bool = false,
+        forwardsClientHitTestingToSourceView: Bool = false
     ) {
         self.sourceView = sourceView
         self.hidesSourceView = hidesSourceView
         self.matchesAlpha = matchesAlpha
         self.matchesTransform = matchesTransform
         self.matchesPosition = matchesPosition
+        self.allowsHitTesting = allowsHitTesting
+        self.forwardsClientHitTestingToSourceView = forwardsClientHitTestingToSourceView
     }
     
     public func makeUIView(context: Context) -> UIPortalView {
@@ -50,6 +68,8 @@ public struct PortalViewRepresentable: UIViewRepresentable {
         portal.matchesAlpha = matchesAlpha
         portal.matchesTransform = matchesTransform
         portal.matchesPosition = matchesPosition
+        portal.allowsHitTesting = allowsHitTesting
+        portal.forwardsClientHitTestingToSourceView = forwardsClientHitTestingToSourceView
         return portal
     }
     
@@ -59,6 +79,8 @@ public struct PortalViewRepresentable: UIViewRepresentable {
         uiView.matchesAlpha = matchesAlpha
         uiView.matchesTransform = matchesTransform
         uiView.matchesPosition = matchesPosition
+        uiView.allowsHitTesting = allowsHitTesting
+        uiView.forwardsClientHitTestingToSourceView = forwardsClientHitTestingToSourceView
     }
 }
 
@@ -215,19 +237,37 @@ public struct PortalMirrorView: View {
     var matchesAlpha: Bool
     var matchesTransform: Bool
     var matchesPosition: Bool
+    var allowsHitTesting: Bool
+    var forwardsClientHitTestingToSourceView: Bool
     
+    /// Creates a live mirror of the captured source view.
+    ///
+    /// - Parameters:
+    ///   - source: The object holding the view to mirror.
+    ///   - hidesSource: Whether to hide the source while it is mirrored.
+    ///   - matchesAlpha: Whether to match the source view's alpha.
+    ///   - matchesTransform: Whether to match the source view's transform.
+    ///   - matchesPosition: Whether to match the source view's position.
+    ///   - allowsHitTesting: Whether the portal participates in hit testing.
+    ///     Defaults to `false`.
+    ///   - forwardsClientHitTestingToSourceView: Whether to forward hit tests
+    ///     on the mirrored content to the source view. Defaults to `false`.
     public init(
         _ source: PortalSource,
         hidesSource: Bool = false,
         matchesAlpha: Bool = true,
         matchesTransform: Bool = true,
-        matchesPosition: Bool = false
+        matchesPosition: Bool = false,
+        allowsHitTesting: Bool = false,
+        forwardsClientHitTestingToSourceView: Bool = false
     ) {
         self._source = ObservedObject(wrappedValue: source)
         self.hidesSource = hidesSource
         self.matchesAlpha = matchesAlpha
         self.matchesTransform = matchesTransform
         self.matchesPosition = matchesPosition
+        self.allowsHitTesting = allowsHitTesting
+        self.forwardsClientHitTestingToSourceView = forwardsClientHitTestingToSourceView
     }
     
     public var body: some View {
@@ -237,7 +277,9 @@ public struct PortalMirrorView: View {
                 hidesSourceView: hidesSource,
                 matchesAlpha: matchesAlpha,
                 matchesTransform: matchesTransform,
-                matchesPosition: matchesPosition
+                matchesPosition: matchesPosition,
+                allowsHitTesting: allowsHitTesting,
+                forwardsClientHitTestingToSourceView: forwardsClientHitTestingToSourceView
             )
         }
     }
